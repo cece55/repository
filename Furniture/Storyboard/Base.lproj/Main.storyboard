@@ -70,7 +70,7 @@
                                 <items>
                                     <barButtonItem systemItem="action" id="zsI-Bn-o6T">
                                         <connections>
-                                            <action selector="actionButtonTapped:" destination="cv4-TC-R5P" id="DfU-cT-rh7"/>
+                                            <action selector="actionButtonTapped:" destination="cv4-TC-R5P" id="yiq-KN-k4J"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>

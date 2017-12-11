@@ -11,7 +11,7 @@ import UIKit
 class FurnitureDetailVC: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     var furniture: Furniture?
-    
+
     @IBOutlet weak var choosePhotoButton: UIButton!
     @IBOutlet weak var furnitureTitleLabel: UILabel!
     @IBOutlet weak var furnitureDescriptionLabel: UILabel!
@@ -36,9 +36,25 @@ class FurnitureDetailVC: UIViewController,UIImagePickerControllerDelegate,UINavi
         
         furnitureTitleLabel.text = furniture.name
         furnitureDescriptionLabel.text = furniture.description
+        
+        
     }
     
-    @IBAction func choosePhotoButtonTapped(_ sender: Any) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
+    {
+        if let selectedImage = info[UIImagePickerControllerOriginalImage] as? UIImage
+        {
+            furniture?.imageData = UIImagePNGRepresentation(selectedImage)
+            
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+
+        @IBAction func choosePhotoButtonTapped(_ sender: Any)
+        {
         let imagePickerController = UIImagePickerController()
         
         imagePickerController.delegate = self
@@ -48,22 +64,44 @@ class FurnitureDetailVC: UIViewController,UIImagePickerControllerDelegate,UINavi
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler:nil)
         alertController.addAction(cancelAction)
         
-        let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: {action in print("User chose Camera")
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            
+        
+            let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: {action in imagePickerController.sourceType = .camera
+            
+            self.present(imagePickerController, animated: true, completion: nil)
             
         })
             alertController.addAction(cameraAction)
-        
-        let photoLibraryAction = UIAlertAction(title: "Photo Library", style: .default, handler : {action in print("User chose Photo Library")
+            }
+            
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+        let photoLibraryAction = UIAlertAction(title: "Photo Library", style: .default, handler : {action in imagePickerController.sourceType = .photoLibrary
+            
+            self.present(imagePickerController, animated: true, completion: nil)
             
         })
         alertController.addAction(photoLibraryAction)
             
         present(alertController, animated: true, completion: nil)
     }
+    }
     
-    @IBAction func actionButtonTapped(_ sender: Any) {
+    @IBAction func actionButtonTapped(_ sender: UIButton)
+    {
+       if let imageData = furniture?.imageData, let image = UIImage(data: imageData) {
+            
+            let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+            
+            activityController.popoverPresentationController?.sourceView = sender
+            
+            present(activityController, animated: true, completion: nil)
+        }
         
     }
+    
+            
+            
 
     /*
     // MARK: - Navigation
@@ -74,5 +112,7 @@ class FurnitureDetailVC: UIViewController,UIImagePickerControllerDelegate,UINavi
         // Pass the selected object to the new view controller.
     }
     */
+
+
 
 }
